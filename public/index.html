@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+    <title>Desafio 10</title>
+</head>
+<body>
+    <!--  Carga y vista de productos -->
+    <button type="button" id="btnUser" class="btn btn-primary">Desloguerase</button>
+    <form id="loginForm" action="/login" method="POST">
+        <div class="mb-3">
+            <label for="userInput" class="form-label">Ingrese su Nombre: </label>
+            <input type="text" class="form-control" id="userInput" name="userInput" aria-describedby="name">
+            <button type="submit" id="btnUser" class="btn btn-primary">enviar</button>
+        </form>
+    <div class="container" id="Bienvenida">
+    </div>
+    <div style="background-color:rgb(211, 211, 211)" class="container">
+        <div class="container">
+            <h1>Ingrese producto</h1>
+            <form id="productForm">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name: </label>
+                    <input type="text" class="form-control" id="nameInput" name="name" aria-describedby="name">
+                </div>
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price: </label>
+                    <input type="text" class="form-control" id="priceInput" name="price" aria-describedby="price">
+                </div>
+                <div class="mb-3">
+                    <label for="photo" class="form-label">Photo: </label>
+                    <input type="text" class="form-control" id="photoInput" name="photo" aria-describedby="photo">
+                </div>
+                <button type="button" id="btnPrd" class="btn btn-primary">Cargar Productos</button>
+            </form>
+        </div>     
+        <br>
+
+        <div class="container" >
+            <h1>Vista de productos</h1>
+            <div style="background-color:rgb(255, 255, 255)" class="container">    
+                <table id="prdList" class="table table-striped">                    
+                </table>    
+            </div>
+        </div>
+    </div>
+    <!-- FIN Carga y vista de productos -->
+    <br>
+    <br>
+    <!-- Chat -->
+    <div style="background-color:rgb(211, 211, 211);" class="container">
+        <h2>Centro de Mensajes</h2>
+        <form  id="messageForm">
+            <div class="mb-3">
+                <input type="email" class="form-control" id="emailInput" name="email" placeholder="Insert E-mail" aria-describedby="email">
+            </div>
+            <div class="mb-3">
+                <input type="text" class="form-control" id="msgInput" name="message" placeholder="Insert Message" aria-describedby="message">
+            </div>
+            <button type="button" id="btnMsg" class="btn btn-success">Send</button>
+        </form>
+
+        <div class="container">
+            <table id="msgList">
+            </table>
+        </div>
+    </div>
+    <!-- FIN Chat -->
+
+    
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>
