@@ -4,8 +4,8 @@ btnPrd.addEventListener("click", addProduct);
 const btnMsg = document.querySelector("#btnMsg");
 btnMsg.addEventListener("click", addMessage);
 
-const btnUser = document.querySelector("#btnUser");
-btnPrd.addEventListener("click", addProduct);
+// const btnUser = document.querySelector("#btnUser");
+// btnPrd.addEventListener("click", addProduct);
 
 function addMessage(e){
     e.preventDefault();
@@ -31,13 +31,13 @@ function addProduct(e){
     socket.emit('newProduct', productToAdd);
 };
 
-function addUser(e){
-    e.preventDefault();
+// function addUser(e){
+//     e.preventDefault();
 
-    let userToAdd = `Bienvenido: ${document.getElementById('userInput').value}`;
+//     let userToAdd = `Bienvenido: ${document.getElementById('userInput').value}`;
 
-    socket.emit('newUser', userToAdd);
-};
+//     socket.emit('newUser', userToAdd);
+// };
 
 // ---------------------------------- OLD VERSION
 
@@ -89,15 +89,15 @@ console.log(data);
     document.getElementById('msgList').innerHTML = htmlToRender;
 });
 
-socket.on('user', (data) => {
+// socket.on('user', (data) => {
 
-    let htmlToRender = `
-        <h2>
-            <p style="color:blue; font-weight: bold;">${data.user}</p>
-        </h2>
-        `    
-    document.getElementById('Bienvenida').innerHTML = htmlToRender;
-});
+//     let htmlToRender = `
+//         <h2>
+//             <p style="color:blue; font-weight: bold;">${data.user}</p>
+//         </h2>
+//         `    
+//     document.getElementById('Bienvenida').innerHTML = htmlToRender;
+// });
 
 
 
@@ -120,5 +120,65 @@ socket.on('new-chat', (data) => {
 });
 
 
+//  fetch("/", {
+        
+//     method: 'POST', 
+//     headers: {
+//         'Content-Type': 'aplications/json',
+//     },
+//     body: JSON.stringify({userName}),
 
 
+// });
+
+//             document.getElementById('Bienvenida').innerHTML = `Bienvenido ${data.userName}`;
+
+// if(user){
+    
+//             document.getElementById('Bienvenida').innerHTML = `Bienvenido ${data.name}`;
+//         } else {
+//             document.getElementById('Bienvenida').innerHTML = 'Good by';
+//         }
+
+
+userAuthorized(async user => {
+    const user = req.body.user;
+    if(user){
+        const response = await fetch('/login',  {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'aplications/json',
+            },
+            body: JSON.stringify({user}),
+        });
+        const data = await response.json();
+
+        document.getElementById('Bienvenida').innerHTML = `Bienvenido ${data.name}`;
+    } else {
+        document.getElementById('Bienvenida').innerHTML = 'Good by';
+    }
+
+})
+
+// function getProducts(){
+//     let dataJSON = '/'
+// fetch(dataJSON)
+//     .then((response) => {
+//         return response.json()
+//     })
+//     .then((json) => {
+
+//         console.log(json);
+
+//         let htmlString = '';
+        
+//         json.forEach(user => {
+//             // desestructurando cada producto
+//             const user = req.body.user
+
+//             htmlString +=`<p> Bienvenido ${user.value} </p>`
+//         });
+//         document.getElementById('Bienvenida').innerHTML = htmlString;
+//     })
+//     .catch((error) => console.log(error));
+// }

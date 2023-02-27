@@ -1,5 +1,7 @@
 const express = require('express');
 const session = require('express-session');
+const passport = require('passport');
+require('./config/auth');
 const mongoStore = require('connect-mongo');
 
 const mongoose = require('mongoose');
@@ -18,6 +20,18 @@ const io = require('socket.io') (httpServer, {cors: {origin:"*"}})
 app.use(express.json());
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
+
+app.use(session({
+    store: mongoStore.create({mongoUrl: mongoDbConfig}),
+    cookie: {
+        maxAge: 60000,
+    }, 
+    secret: 'my-super-secret',
+    resave: true,
+    saveUninitialized: true, 
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 httpServer.listen(PORT, ()=>{
     console.log(`Server listening in port: ${PORT}`);
@@ -55,9 +69,11 @@ let chat = [
 ];
 
 
-let user = [
+let users  = [
     {
-        user: "nico"
+        username: "nico",
+        password: "123",
+
     }
 ];
 
@@ -93,99 +109,40 @@ io.on('connection', (socket) => {
     });
 });
 
-console.log(user);
-
-// const cookieParser = require('cookie-parser');
-
-// app.use(cookieParser());
-
-// const cookiesRouter = express.Router();
-
-// cookiesRouter.post('/', (req, res) => {
-//     const cookieName = req.body.name;
-//     const cookieValue = req.body.value;;
-//     const cookieMaxAge = req.body.maxAge;
-
-//     res.cookie(cookieName, cookieValue, { MaxAge }).send('OK');
-// });
-
-// app.use('/coockies', cookiesRouter);
 
 
-app.use(session({
-    store: mongoStore.create({mongoUrl: mongoDbConfig}),
-    cookie: {
-        maxAge: 60000,
-    },
-    secret: 'my-super-secret',
-    resave: true,
-    saveUninitialized: true, 
-}));
 
-app.get('/login', (req, res) => {
+app.post('/signup', passport.authenticate('signup', { failureRedirect: '/login.html' }), (req, res) => {
     
-    const userName = req.body;
-    user.push(userName);
-
-    let loginToRender =`<h2>Login de Usuario</h2>
-        <form action="/" method="POST">
-            <div class="mb-3">
-                <label for="name" class="form-label">Ingrese su Nombre: </label>
-                <input type="text" class="form-control" id="userInput" name="userInput" aria-describedby="name">
-                <button type="submit" id="btnUser" class="btn btn-primary">enviar</button>
-        </form>`
-
-        res.send(loginToRender);
+    req.session.username = req.user.username;
+    res.redirect('/datos');
 });
 
-app.post('/post', (req, res) => {
-    
-    const userName = req.body.userInput;
-    user.push(userName);
+app.post('/login', passport.authenticate('login', { failureRedirect: '/login.html' }), (req, res) => {
+
+    req.session.username = req.user.username;
+    res.redirect('/datos');
 
 });
-// productsRouter.post('/', (req, res) => {
-//     const newID = products.length + 1;
-    
-//     const productToAdd = req.body;
-//     const newProduct = {'id':newID, ...productToAdd};
-//     products.push(newProduct);
 
-//     res.status(200).json({ products });
-// });
 
-app.get('/', (req, res) => {
+app.get('/datos', (req, res) => {
 
-    user = req.body;
-    console.log(user);
-    if (user == 'nico') {
-        res.redirect('/');
+    if(req.session.username) {
+
+        res.send(`Bienvenido ${req.session.username}`)
+        // res.json(req.session.name);
     } else {
-        res.send(`El usuario ${user}, no existe`);
+        res.redirect('/login.html'); 
     }
 });
 
-
 app.get('/logout', (req, res) => {
-
     req.session.destroy((err) => {
-        if (err) {
-            res.status(500).send('Something terrible just happened!!!');
+        if(err) {
+            res.status(500).send('Failed to logout');
         } else {
-            res.send(`Hasta Luego ${user}`);
+            res.redirect('/login.html'); 
         }
-    }) 
+    });
 });
-
-// app.get('/', (req, res) => {
-
-
-//     if (typeof req.session.count !== 'number') {
-//         req.session.name = req.query.name ?? '';
-//         req.session.count = 1;
-//         res.send(`Hola ${req.session.name}, te damos la bienvenida`);
-//     } else {
-//         req.session.count ++;
-//         res.send(`Hola ${req.session.name}, has visitado esta pagina ${req.session.count} veces`);
-//     }
-// });
